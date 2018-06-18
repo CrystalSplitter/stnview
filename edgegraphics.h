@@ -6,7 +6,7 @@
 class EdgeGraphics : public QGraphicsItem
 {
 public:
-    EdgeGraphics(QPointF start, QPointF end);
+    EdgeGraphics(QPointF start, QPointF end, QString label);
 
     QRectF boundingRect() const override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
@@ -15,11 +15,15 @@ public:
     QPointF getMidpoint() const;
     QSizeF getLineSize() const;
     void setReverseBend(bool val);
+    void setLabel(QString label);
 
 private:
     QPointF start_;
     QPointF end_;
+    // Label text for the edge.
+    QString label_;
     QColor color_;
+
     bool reverseBend_ = false;
     double arrowSize_ = 10.0;
     double arrowPercent_ = 0.7;

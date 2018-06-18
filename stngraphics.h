@@ -30,6 +30,8 @@ private:
 
     // Data members.
 private:
+    QString retrieveEdgeLabel(Constraint* edge);
+
     SimpTempNet& stn_;
     std::map<Node*, NodeGraphics*> nodeToCircleMap_;
 };

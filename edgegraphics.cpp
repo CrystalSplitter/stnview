@@ -8,9 +8,10 @@
 const QColor DEFAULT_LINE_COLOUR(30, 30, 30);
 const size_t DEFAULT_LINE_WIDTH(2);
 
-EdgeGraphics::EdgeGraphics(QPointF start, QPointF end) :
+EdgeGraphics::EdgeGraphics(QPointF start, QPointF end, QString label) :
     start_(start),
     end_(end),
+    label_(label),
     color_(DEFAULT_LINE_COLOUR)
 {
     // Nothing to do here.
@@ -26,6 +27,10 @@ QRectF EdgeGraphics::boundingRect() const
 void EdgeGraphics::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
                          QWidget* widget)
 {
+    // We don't use these parameters. Silence the warnings.
+    (void) option;
+    (void) widget;
+
     QPainterPath edgePath(start_);
 
     // check to see if we should reverse the bend on this edge.
@@ -35,6 +40,7 @@ void EdgeGraphics::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
     painter->setPen(QPen(DEFAULT_LINE_COLOUR, DEFAULT_LINE_WIDTH));
     painter->drawPath(edgePath);
 
+    // Draw the arrow
     painter->setBrush(QBrush(QColor()));
     double arrowAngle = atan(edgePath.slopeAtPercent(arrowPercent_)) * 180/M_PI;
     QPainterPath arrowPath;
@@ -45,6 +51,9 @@ void EdgeGraphics::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
 
     arrowPath.addPolygon(polygon);
     painter->drawPath(arrowPath);
+
+    // Draw the Text.
+    painter->drawText(edgePath.pointAtPercent(0.5) + QPointF(20, 20), label_);
 }
 
 QPointF EdgeGraphics::getMidpoint() const
@@ -101,4 +110,9 @@ bool EdgeGraphics::shouldReverseArrow(QPainterPath& path) const
     QPointF p1(path.pointAtPercent(0.49));
     QPointF p2(path.pointAtPercent(0.51));
     return p2.x() < p1.x();
+}
+
+void EdgeGraphics::setLabel(QString label)
+{
+    label_ = label;
 }

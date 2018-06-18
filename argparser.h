@@ -2,10 +2,11 @@
 #define ARGPARSER_H
 
 
-class argparser
+class ArgParser
 {
 public:
-    argparser();
+    ArgParser();
+    int parse(int argc, char** argv);
 };
 
 #endif // ARGPARSER_H
