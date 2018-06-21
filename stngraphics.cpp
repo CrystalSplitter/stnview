@@ -16,9 +16,9 @@ void StnGraphics::paintNodes(QGraphicsScene* scene)
     for (size_t i = 0; i < stn_.getNodes().size(); i++) {
         Node* node = stn_.getNodes().at(i);
         float randX = static_cast <float>(rand()) / static_cast <float>(RAND_MAX);
-        randX = randX * scene->width()*0.5f + scene->height()*0.25f;
+        randX = randX * scene->width()*0.8f + scene->height()*0.1f;
         float randY = static_cast <float>(rand()) / static_cast <float>(RAND_MAX);
-        randY = randY * scene->height()*0.5f + scene->height()*0.25f;
+        randY = randY * scene->height()*0.8f + scene->height()*0.1f;
 
         NodeGraphics* nG{new NodeGraphics()};
         nG->setPos(QPointF(randX, randY));
