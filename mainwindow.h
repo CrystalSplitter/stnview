@@ -17,6 +17,9 @@ public:
 
 private:
     Ui::MainWindow* ui;
+
+    QGraphicsScene* createScene(QGraphicsView* gViewPtr);
+
 };
 
 #endif // MAINWINDOW_H

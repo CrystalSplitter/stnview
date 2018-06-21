@@ -14,6 +14,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QGraphicsView>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
@@ -27,8 +28,10 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralwidget;
+    QHBoxLayout *horizontalLayout;
     QGraphicsView *myGraphicsView;
     QMenuBar *menubar;
+    QMenu *menuSomething_New;
     QMenu *menuFile;
     QStatusBar *statusbar;
 
@@ -37,32 +40,34 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->setWindowModality(Qt::NonModal);
-        MainWindow->resize(888, 663);
-        centralwidget = new QWidget(MainWindow);
-        centralwidget->setObjectName(QStringLiteral("centralwidget"));
-        centralwidget->setEnabled(true);
-        centralwidget->setCursor(QCursor(Qt::ArrowCursor));
-        centralwidget->setFocusPolicy(Qt::ClickFocus);
-        myGraphicsView = new QGraphicsView(centralwidget);
-        myGraphicsView->setObjectName(QStringLiteral("myGraphicsView"));
-        myGraphicsView->setEnabled(true);
-        myGraphicsView->setGeometry(QRect(150, 10, 721, 601));
+        MainWindow->resize(940, 585);
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(myGraphicsView->sizePolicy().hasHeightForWidth());
-        myGraphicsView->setSizePolicy(sizePolicy);
-        myGraphicsView->setFrameShape(QFrame::StyledPanel);
-        myGraphicsView->setFrameShadow(QFrame::Raised);
-        myGraphicsView->setLineWidth(4);
-        myGraphicsView->setMidLineWidth(3);
+        sizePolicy.setHeightForWidth(MainWindow->sizePolicy().hasHeightForWidth());
+        MainWindow->setSizePolicy(sizePolicy);
+        centralwidget = new QWidget(MainWindow);
+        centralwidget->setObjectName(QStringLiteral("centralwidget"));
+        centralwidget->setEnabled(true);
+        sizePolicy.setHeightForWidth(centralwidget->sizePolicy().hasHeightForWidth());
+        centralwidget->setSizePolicy(sizePolicy);
+        centralwidget->setCursor(QCursor(Qt::ArrowCursor));
+        centralwidget->setFocusPolicy(Qt::ClickFocus);
+        horizontalLayout = new QHBoxLayout(centralwidget);
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        myGraphicsView = new QGraphicsView(centralwidget);
+        myGraphicsView->setObjectName(QStringLiteral("myGraphicsView"));
         myGraphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         myGraphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        myGraphicsView->setRenderHints(QPainter::Antialiasing|QPainter::TextAntialiasing);
+
+        horizontalLayout->addWidget(myGraphicsView);
+
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QStringLiteral("menubar"));
-        menubar->setGeometry(QRect(0, 0, 888, 22));
+        menubar->setGeometry(QRect(0, 0, 940, 22));
+        menuSomething_New = new QMenu(menubar);
+        menuSomething_New->setObjectName(QStringLiteral("menuSomething_New"));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         MainWindow->setMenuBar(menubar);
@@ -71,6 +76,7 @@ public:
         MainWindow->setStatusBar(statusbar);
 
         menubar->addAction(menuFile->menuAction());
+        menubar->addAction(menuSomething_New->menuAction());
 
         retranslateUi(MainWindow);
 
@@ -80,6 +86,7 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", nullptr));
+        menuSomething_New->setTitle(QApplication::translate("MainWindow", "Something Old", nullptr));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", nullptr));
     } // retranslateUi
 
