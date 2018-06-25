@@ -59,6 +59,7 @@ public:
         myGraphicsView->setObjectName(QStringLiteral("myGraphicsView"));
         myGraphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         myGraphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        myGraphicsView->setRenderHints(QPainter::Antialiasing|QPainter::TextAntialiasing);
 
         horizontalLayout->addWidget(myGraphicsView);
 

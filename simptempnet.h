@@ -50,6 +50,15 @@ public:
             size_t to
     );
 
+    /**
+     * @brief assignMakespan Place makespan constraints on all nodes using a provided reference
+     *                       node.
+     * @param referenceNodeId node id of the reference.
+     * @param minVal Minimum makespan time.
+     * @param maxVal Maximum makespan time.
+     */
+    void assignMakespan(size_t referenceNodeId, double minVal, double maxVal);
+
     std::vector<Node*> getNodes();
     std::vector<Constraint*> getConstraints();
     /**

@@ -4,6 +4,8 @@
 #include <QGraphicsView>
 #include <QMainWindow>
 
+#include "stngraphics.h"
+
 namespace Ui { class MainWindow; }
 
 class MainWindow : public QMainWindow
@@ -14,9 +16,12 @@ public:
     ~MainWindow();
 
     QGraphicsView* getGraphicsView();
+    StnGraphics* getStnGraphics();
 
 private:
     Ui::MainWindow* ui;
+    StnGraphics* stnGraphics_;
+    SimpTempNet* stn_;
 
     QGraphicsScene* createScene(QGraphicsView* gViewPtr);
 

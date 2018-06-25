@@ -1,1 +1,6 @@
 *.o
+.qmake.stash
+*.pro.user
+unnamed_project
+moc_*.cpp
+moc_*.h

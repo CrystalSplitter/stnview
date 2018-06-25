@@ -9,10 +9,13 @@
 #include "constraint.h"
 #include "edgegraphics.h"
 
-class StnGraphics
+class StnGraphics: public QObject
 {
+    Q_OBJECT
 public:
-    StnGraphics(SimpTempNet& stn);
+    explicit StnGraphics(SimpTempNet* stn, QWidget* parent=nullptr);
+    explicit StnGraphics(QWidget* parent=nullptr);
+    ~StnGraphics();
     /**
      * @brief paintNodes Paints the modes of the STN onto the provided scene.
      * @param scene Scene to draw on.
@@ -24,16 +27,28 @@ public:
      */
     void paintEdges(QGraphicsScene* scene);
 
+    void assignStn(SimpTempNet* stn);
+
+public slots:
+    void updateEdges();
+
     // Private functions
 private:
-    std::vector<QPointF> rowStartPoints();
+    /**
+     * @brief circularPositions Computes a set of points that are equidistant along a circle.
+     * @param centre Position of the circle centre in the GraphicsScene.
+     * @param radius Radius of the circle.
+     * @return Returns a vector of QPointFs of each position.
+     */
+    std::vector<QPointF> circularPositions(QPointF centre, double radius, size_t nodeCount);
 
     // Data members.
 private:
-    QString retrieveEdgeLabel(Constraint* edge);
-
-    SimpTempNet& stn_;
+    SimpTempNet* stn_;
     std::map<Node*, NodeGraphics*> nodeToCircleMap_;
+    std::map<Constraint*, EdgeGraphics*> edgeGraphics_;
+
+    QString retrieveEdgeLabel(Constraint* edge);
 };
 
 #endif // STNGRAPHICS_H

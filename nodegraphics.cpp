@@ -14,7 +14,7 @@ NodeGraphics::NodeGraphics() :
     trackCursor_(false),
     drawText_(true)
 {
-    //graphicsView_ = gView;
+    setAcceptHoverEvents(true);
 }
 
 QRectF NodeGraphics::boundingRect() const
@@ -28,6 +28,9 @@ QRectF NodeGraphics::boundingRect() const
 void NodeGraphics::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                    QWidget *widget)
 {
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
+
     painter->setBrush(color_);
     painter->drawEllipse(centre_, getRadius(), getRadius());
     if (drawText_) {
@@ -59,6 +62,39 @@ void NodeGraphics::advance(int phase)
         */
     }
 }
+
+void NodeGraphics::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    prepareGeometryChange();
+    QPointF newPoint{mapToScene(event->pos())};
+    QPointF currentPoint{getPos()};
+    move(Utilities::linearInterpolate(currentPoint, newPoint, 0.5));
+}
+
+void NodeGraphics::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+    Q_UNUSED(event);
+    setCursor(QCursor(Qt::ClosedHandCursor));
+}
+
+void NodeGraphics::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+{
+    Q_UNUSED(event);
+    setCursor(QCursor(Qt::OpenHandCursor));
+}
+
+void NodeGraphics::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    Q_UNUSED(event);
+    setCursor(QCursor(Qt::OpenHandCursor));
+}
+
+void NodeGraphics::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    Q_UNUSED(event);
+    setCursor(QCursor(Qt::ArrowCursor));
+}
+
 
 // GETTERS & SETTERS
 

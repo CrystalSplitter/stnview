@@ -16,6 +16,10 @@ public:
     QSizeF getLineSize() const;
     void setReverseBend(bool val);
     void setLabel(QString label);
+    void setStartPoint(const QPointF &pos);
+    void setEndPoint(const QPointF &pos);
+
+    void advance(int phase) override;
 
 private:
     QPointF start_;
@@ -24,9 +28,12 @@ private:
     QString label_;
     QColor color_;
 
-    bool reverseBend_ = false;
-    double arrowSize_ = 10.0;
-    double arrowPercent_ = 0.7;
+    QPointF labelOffset_;
+
+    bool reverseBend_{false};
+    double bendAmount_{50.0};
+    double arrowSize_{10.0};
+    double arrowPercent_{0.7};
 
     QPointF getControlPoint(double bendAmount, bool bendToScale) const;
     QPolygonF createArrow(QPointF position, double size, double angle, bool reverse) const;

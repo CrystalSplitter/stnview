@@ -5,14 +5,16 @@
 
 #include "edgegraphics.h"
 
-const QColor DEFAULT_LINE_COLOUR(30, 30, 30);
-const size_t DEFAULT_LINE_WIDTH(2);
+const QColor DEFAULT_LINE_COLOUR{30, 30, 30};
+const size_t DEFAULT_LINE_WIDTH{2};
+const QPointF DEFAULT_LABEL_OFFSET{10, -10};
 
 EdgeGraphics::EdgeGraphics(QPointF start, QPointF end, QString label) :
     start_(start),
     end_(end),
     label_(label),
-    color_(DEFAULT_LINE_COLOUR)
+    color_(DEFAULT_LINE_COLOUR),
+    labelOffset_(DEFAULT_LABEL_OFFSET)
 {
     // Nothing to do here.
 }
@@ -20,7 +22,7 @@ EdgeGraphics::EdgeGraphics(QPointF start, QPointF end, QString label) :
 QRectF EdgeGraphics::boundingRect() const
 {
     QSizeF size{getLineSize()};
-    QPointF topLeft{getMidpoint().x() + size.width()*0.5, getMidpoint().y() + size.height()*0.5};
+    QPointF topLeft{getMidpoint().x() - size.width()*0.5, getMidpoint().y() - size.height()*0.5};
     return QRectF{topLeft, size};
 }
 
@@ -36,7 +38,7 @@ void EdgeGraphics::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
     // check to see if we should reverse the bend on this edge.
     int revBend = reverseBend_ ? -1 : 1;
 
-    edgePath.quadTo(getControlPoint(50 * revBend, false), end_);
+    edgePath.quadTo(getControlPoint(bendAmount_ * revBend, false), end_);
     painter->setPen(QPen(DEFAULT_LINE_COLOUR, DEFAULT_LINE_WIDTH));
     painter->drawPath(edgePath);
 
@@ -49,11 +51,21 @@ void EdgeGraphics::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
             arrowAngle,
             shouldReverseArrow(edgePath));
 
+
     arrowPath.addPolygon(polygon);
     painter->drawPath(arrowPath);
 
     // Draw the Text.
-    painter->drawText(edgePath.pointAtPercent(0.5) + QPointF(20, 20), label_);
+    painter->drawText(edgePath.pointAtPercent(0.5) + labelOffset_, label_);
+}
+
+void EdgeGraphics::advance(int phase)
+{
+    if (!phase) {
+        return;
+    }
+
+    prepareGeometryChange();
 }
 
 QPointF EdgeGraphics::getMidpoint() const
@@ -65,7 +77,8 @@ QPointF EdgeGraphics::getMidpoint() const
 
 QSizeF EdgeGraphics::getLineSize() const
 {
-    return QSizeF{fabs(end_.x() - start_.x()), fabs(end_.y() - start_.y())};
+    return QSizeF{fabs(end_.x() - start_.x()) + bendAmount_ + arrowSize_ + labelOffset_.x(),
+                fabs(end_.y() - start_.y()) + bendAmount_ + arrowSize_ + labelOffset_.y()};
 }
 
 void EdgeGraphics::setReverseBend(bool val) { reverseBend_ = val; }
@@ -115,4 +128,14 @@ bool EdgeGraphics::shouldReverseArrow(QPainterPath& path) const
 void EdgeGraphics::setLabel(QString label)
 {
     label_ = label;
+}
+
+void EdgeGraphics::setStartPoint(const QPointF& pos)
+{
+    start_ = pos;
+}
+
+void EdgeGraphics::setEndPoint(const QPointF& pos)
+{
+    end_ = pos;
 }

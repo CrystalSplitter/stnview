@@ -18,7 +18,9 @@ SimpTempNet::~SimpTempNet()
     }
 
     for (auto const& node: nodes_) {
-        delete node;
+        if (node != nullptr) {
+            delete node;
+        }
     }
 }
 
@@ -49,12 +51,16 @@ ReqConstraint* SimpTempNet::addReqConstraint(size_t from,
 {
     const auto constraintThere = constraints_.find(std::make_pair(from, to));
 
-    // Try to cast Constraints to a requirement Edge.
     ReqConstraint* reqThere;
-    try {
-        reqThere = dynamic_cast<ReqConstraint*>(constraintThere->second);
-    } catch (std::bad_cast) {
+    if (constraintThere == constraints_.end()) {
         reqThere = nullptr;
+    } else {
+        // Try to cast Constraints to a requirement Edge.
+        try {
+            reqThere = dynamic_cast<ReqConstraint*>(constraintThere->second);
+        } catch (std::bad_cast) {
+            reqThere = nullptr;
+        }
     }
 
     // Check if we don't have this constraint.
@@ -92,6 +98,15 @@ ContConstraint* SimpTempNet::addContConstraint(size_t from, size_t to)
     return addedConstraint;
 }
 
+void SimpTempNet::assignMakespan(size_t referenceNodeId, double minVal, double maxVal)
+{
+    for (size_t i = 0; i < nodes_.size(); ++i) {
+        if (i == referenceNodeId) {
+            continue;
+        }
+        addReqConstraint(referenceNodeId, i, minVal, maxVal);
+    }
+}
 
 std::vector<Node*> SimpTempNet::getNodes()
 {
@@ -115,7 +130,6 @@ Node* SimpTempNet::getNodeAt(size_t ind) const
 {
     return nodes_.at(ind);
 }
-
 
 Constraint* SimpTempNet::getConstraintBetween(size_t from, size_t to) const
 {

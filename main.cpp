@@ -11,7 +11,7 @@
 QGraphicsScene* createScene(MainWindow* mainWin, QGraphicsView* gViewPtr);
 SimpTempNet stnFromJson(char* filepath);
 
-const size_t GRAPHICS_FPS = 60;
+const size_t GRAPHICS_FPS = 40;
 
 int main(int argc, char** argv)
 {
@@ -24,6 +24,8 @@ int main(int argc, char** argv)
     mainWin.show();
 
     QTimer timer;
+    QObject::connect(&timer, SIGNAL(timeout()), mainWin.getStnGraphics(),
+                     SLOT(updateEdges()));
     QObject::connect(&timer, SIGNAL(timeout()), mainWin.getGraphicsView()->scene(),
                      SLOT(advance()));
     timer.start(1000/GRAPHICS_FPS);

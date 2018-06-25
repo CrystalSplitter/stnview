@@ -4,12 +4,12 @@
 #include <QGraphicsItem>
 #include <QDebug>
 #include <QGraphicsView>
+#include <QGraphicsSceneMouseEvent>
 
 class NodeGraphics : public QGraphicsItem
 {
 public:
-    NodeGraphics(/*QGraphicsView* gView*/);
-
+    NodeGraphics();
 
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
@@ -43,6 +43,11 @@ private:
 
 protected:
     void advance(int phase) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
+    void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override;
 };
 
 #endif // NODEGRAPHICS_H
